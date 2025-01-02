@@ -1,0 +1,9 @@
+# .dockerignore
+tf/
+README.md
+pyproject.toml
+uv.lock
+.git/
+__pycache__/
+*.pyc
+.venv

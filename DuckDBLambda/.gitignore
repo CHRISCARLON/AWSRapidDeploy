@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.python-version
+uv.lock
+
+# Virtual environments
+.venv
+
+# Terraform
+tf/.terraform.lock.hcl
+tf/.terraform
+tf/terraform.tfstate
+tf/terraform.tfstate.backup

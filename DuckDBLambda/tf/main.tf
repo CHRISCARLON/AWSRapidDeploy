@@ -31,7 +31,7 @@ resource "aws_ecr_repository_policy" "duckdb_lambda_policy" {
 }
 
 # S3 Buckets and their policies
-# Create landing bucket - WHERE THE DATA STARTS/LANDS 
+# Create landing bucket - WHERE THE DATA STARTS/LANDS
 resource "aws_s3_bucket" "duckdb_lambda_input_bucket" {
   bucket = "duckdb-lambda-input-bucket"
 }
@@ -123,13 +123,14 @@ resource "aws_iam_role_policy" "lambda_policy" {
 }
 
 # Lambda Function
+# Make sure you select the arm64 architecture if you're on Mac
 resource "aws_lambda_function" "duckdb_processor" {
   function_name = "duckdb-processor"
-  role         = aws_iam_role.lambda_role.arn
-  timeout      = 900
-  memory_size  = 1024
-  package_type = "Image"
-  image_uri    = "${data.aws_ecr_repository.duckdb_lambda.repository_url}:latest"
+  role          = aws_iam_role.lambda_role.arn
+  timeout       = 900
+  memory_size   = 1024
+  package_type  = "Image"
+  image_uri     = "${data.aws_ecr_repository.duckdb_lambda.repository_url}:latest"
   architectures = ["arm64"]
   environment {
     variables = {
@@ -141,7 +142,7 @@ resource "aws_lambda_function" "duckdb_processor" {
 resource "aws_lambda_function_event_invoke_config" "duckdb_processor_config" {
   function_name                = aws_lambda_function.duckdb_processor.function_name
   maximum_event_age_in_seconds = 60
-  maximum_retry_attempts      = 0 
+  maximum_retry_attempts       = 0
 }
 
 # S3 Event Trigger
@@ -149,7 +150,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   bucket = aws_s3_bucket.duckdb_lambda_input_bucket.id
   lambda_function {
     lambda_function_arn = aws_lambda_function.duckdb_processor.arn
-    events             = ["s3:ObjectCreated:*"]
+    events              = ["s3:ObjectCreated:*"]
   }
 }
 
